@@ -1,0 +1,17 @@
+[
+  {
+    "id": "keyboard",
+    "name": "Keyboards",
+    "icon": "⌨️"
+  },
+  {
+    "id": "mouse",
+    "name": "Mice",
+    "icon": "🖱️"
+  },
+  {
+    "id": "headset",
+    "name": "Headsets",
+    "icon": "🎧"
+  }
+]

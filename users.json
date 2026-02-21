@@ -1,0 +1,42 @@
+[
+  {
+    "id": "admin-1",
+    "email": "ammabenothmn@gmail.com",
+    "passwordHash": "$2a$10$ScKUFOXIfzIMY.oP9EZkqeasz2TGcia4egG8S2A.2lbkTUf0.untq",
+    "name": "Admin User",
+    "phone": "+216 12 345 678",
+    "dateOfBirth": "1990-01-01",
+    "isAdmin": true,
+    "createdAt": "2026-01-15"
+  },
+  {
+    "id": "user-1768434037345",
+    "email": "ammabenothmn@gmail.com",
+    "passwordHash": "$2a$10$cLPlUwlKG3xriwxyS9mWIuvuCfoMyIn25SM.YPXw.ux3rwklRtWu2",
+    "name": "mohamed  ben oth",
+    "phone": "55916285",
+    "dateOfBirth": "2004-09-08",
+    "isAdmin": false,
+    "createdAt": "2026-01-14T23:40:37.345Z"
+  },
+  {
+    "id": "user-test",
+    "email": "test@example.com",
+    "passwordHash": "$2b$10$r9h6cIPz0gi.URNNX3kh2OPST9/PgBkqquzi.Ss7KIUgO2t0jKMUm",
+    "name": "Test User",
+    "phone": "123456",
+    "dateOfBirth": "2000-01-01",
+    "isAdmin": false,
+    "createdAt": "2026-01-15T00:00:00.000Z"
+  },
+  {
+    "id": "user-1768436376801",
+    "email": "mohamed_benothmen@ieee.org",
+    "passwordHash": "$2a$10$XyD1dyKT6biN/vZ4Ea9iI.9.6Ye9iVNCFO9QEzv53BiHpEXd750r6",
+    "name": "mohamed 2  ieee",
+    "phone": "55916285",
+    "dateOfBirth": "2004-09-08",
+    "isAdmin": false,
+    "createdAt": "2026-01-15T00:19:36.801Z"
+  }
+]
