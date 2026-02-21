@@ -1,0 +1,7 @@
+cd "C:\Users\ammab\OneDrive\Desktop\last version\ecomerce"
+
+"C:\Program Files\Git\bin\git.exe" add server.js
+
+"C:\Program Files\Git\bin\git.exe" commit -m "Add password reset endpoints"
+
+"C:\Program Files\Git\bin\git.exe" push origin main
