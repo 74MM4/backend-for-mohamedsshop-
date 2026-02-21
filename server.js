@@ -559,11 +559,6 @@ app.post('/api/auth/reset-password', (req, res) => {
   }
 });
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Backend is running' });
-});
-
 // Email Sending Endpoints
 app.post('/api/send-confirmation-code', async (req, res) => {
   try {
