@@ -421,6 +421,144 @@ app.post('/api/auth/update-profile', (req, res) => {
   }
 });
 
+// --- Password Reset Endpoints ---
+
+// Request password reset - generates code and sends email
+app.post('/api/auth/request-password-reset', async (req, res) => {
+  try {
+    const { email, appPassword, senderEmail } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email required' });
+    }
+
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    const users = JSON.parse(data);
+    const user = users.find(u => u.email === email);
+
+    if (!user) {
+      // Don't reveal if email exists or not for security
+      return res.json({ success: true, message: 'If email exists, reset code sent' });
+    }
+
+    // Generate 6-digit reset code
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const resetCodeHash = bcrypt.hashSync(resetCode, 10);
+    const resetCodeExpiry = Date.now() + (15 * 60 * 1000); // Valid for 15 minutes
+
+    // Store reset code in user object
+    user.resetCodeHash = resetCodeHash;
+    user.resetCodeExpiry = resetCodeExpiry;
+    
+    const userIndex = users.findIndex(u => u.email === email);
+    users[userIndex] = user;
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+
+    // Send reset code via email
+    if (appPassword && senderEmail) {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: senderEmail,
+            pass: appPassword
+          }
+        });
+
+        const emailHtml = `
+          <h2>Password Reset Request</h2>
+          <p>Hi ${user.name || 'User'},</p>
+          <p>Your password reset code is:</p>
+          <h1 style="color: #007bff; font-family: monospace; font-size: 32px; letter-spacing: 5px;">${resetCode}</h1>
+          <p>This code is valid for 15 minutes.</p>
+          <p>If you didn't request this, please ignore this email.</p>
+          <hr>
+          <p style="font-size: 12px; color: #666;">
+            Do not share this code with anyone.
+          </p>
+        `;
+
+        await transporter.sendMail({
+          from: senderEmail,
+          to: email,
+          subject: 'Password Reset Code - GamerGear',
+          html: emailHtml
+        });
+
+        console.log(`[email] Password reset code sent to ${email}`);
+      } catch (emailError) {
+        console.error('[email] Failed to send reset code:', emailError.message);
+        // Still return success since user is stored
+      }
+    }
+
+    res.json({ success: true, message: 'Reset code sent to email if account exists' });
+  } catch (error) {
+    console.error('Error requesting password reset:', error);
+    res.status(500).json({ error: 'Failed to process password reset request' });
+  }
+});
+
+// Reset password with code
+app.post('/api/auth/reset-password', (req, res) => {
+  try {
+    const { email, resetCode, newPassword } = req.body;
+
+    if (!email || !resetCode || !newPassword) {
+      return res.status(400).json({ error: 'Email, reset code, and new password required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    const users = JSON.parse(data);
+    const userIndex = users.findIndex(u => u.email === email);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = users[userIndex];
+
+    // Check if reset code exists and is valid
+    if (!user.resetCodeHash || !user.resetCodeExpiry) {
+      return res.status(400).json({ error: 'No password reset request found. Please request a reset first.' });
+    }
+
+    // Check if code has expired
+    if (Date.now() > user.resetCodeExpiry) {
+      // Clear the invalid reset code
+      user.resetCodeHash = undefined;
+      user.resetCodeExpiry = undefined;
+      users[userIndex] = user;
+      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+      return res.status(400).json({ error: 'Reset code has expired. Please request a new one.' });
+    }
+
+    // Verify the reset code
+    const codeMatch = bcrypt.compareSync(resetCode, user.resetCodeHash);
+    if (!codeMatch) {
+      return res.status(401).json({ error: 'Invalid reset code' });
+    }
+
+    // Update password and clear reset code
+    user.passwordHash = bcrypt.hashSync(newPassword, 10);
+    user.resetCodeHash = undefined;
+    user.resetCodeExpiry = undefined;
+    
+    users[userIndex] = user;
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+
+    console.log(`[auth] Password reset for user: ${email}`);
+    res.json({ success: true, message: 'Password has been reset successfully' });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Backend is running' });
