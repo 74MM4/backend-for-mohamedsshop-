@@ -1,15 +1,15 @@
 @echo off
-REM Deploy to Railway with YOUR GitHub Repository
-REM Created for: https://github.com/74MM4/backend-for-mohamedsshop-.git
+REM FREE Backend Deployment to RENDER
+REM Using: https://render.com (Completely Free!)
 
-title Backend Deployment Setup - 74MM4
+title FREE Backend Deployment - Render.com
 
 cd /d "C:\Users\ammab\OneDrive\Desktop\last version\ecomerce"
 
 echo.
 echo ====================================
-echo   Backend Deployment Setup
-echo   Repo: backend-for-mohamedsshop-
+echo   FREE Backend Deployment
+echo   Platform: Render.com
 echo ====================================
 echo.
 
@@ -18,50 +18,58 @@ echo [1/5] Initializing Git repository...
 "C:\Program Files\Git\bin\git.exe" init
 
 echo [2/5] Configuring Git...
-"C:\Program Files\Git\bin\git.exe" config user.name "Ecommerce Developer"
-"C:\Program Files\Git\bin\git.exe" config user.email "dev@ecommerce.app"
+"C:\Program Files\Git\bin\git.exe" config user.name "Developer"
+"C:\Program Files\Git\bin\git.exe" config user.email "dev@app.com"
 
 echo [3/5] Staging all files...
 "C:\Program Files\Git\bin\git.exe" add .
 
-echo [4/5] Creating initial commit...
-"C:\Program Files\Git\bin\git.exe" commit -m "Backend deployment - Ready for Railway"
+echo [4/5] Creating commit...
+"C:\Program Files\Git\bin\git.exe" commit -m "Backend ready for Render free deployment"
 
-echo [5/5] Connecting to GitHub...
+echo [5/5] Pushing to GitHub...
 "C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/74MM4/backend-for-mohamedsshop-.git
 "C:\Program Files\Git\bin\git.exe" branch -M main
 "C:\Program Files\Git\bin\git.exe" push -u origin main
 
 echo.
 echo ====================================
-echo   SETUP COMPLETE!
+echo   SUCCESS! Code pushed to GitHub!
 echo ====================================
 echo.
-echo Your code has been pushed to GitHub!
+echo DEPLOYMENT STEPS (FREE):
 echo.
-echo NEXT STEPS:
+echo 1. Go to: https://render.com
+echo    Click "Sign up" with GitHub
 echo.
-echo 1. Go to Railway: https://railway.app
-echo    - Login with GitHub
-echo    - New Project > Deploy from GitHub
-echo    - Select: backend-for-mohamedsshop-
-echo    - Wait 2-3 minutes for deployment
-echo    - Copy the Railway URL
+echo 2. Click "New +" → "Web Service"
 echo.
-echo 2. Update Vercel Environment Variable:
-echo    - Go to: https://vercel.com/dashboard
-echo    - Project: mohamedsshop
-echo    - Settings > Environment Variables
-echo    - Add:
+echo 3. Connect Repository:
+echo    Select: backend-for-mohamedsshop-
+echo.
+echo 4. Configure:
+echo    - Name: backend-for-mohamedsshop
+echo    - Environment: Node
+echo    - Build Command: npm install
+echo    - Start Command: node server.js
+echo    - Plan: Free (important!)
+echo.
+echo 5. Click "Create Web Service"
+echo.
+echo 6. Wait 3-5 minutes for deployment
+echo.
+echo 7. Copy your URL from Render dashboard
+echo    (looks like: https://backend-xxx.onrender.com)
+echo.
+echo 8. Go to: https://vercel.com/dashboard
+echo    Settings > Environment Variables
+echo    Add:
 echo      Name: NEXT_PUBLIC_API_URL
-echo      Value: https://[YOUR-RAILWAY-URL].up.railway.app/api
-echo      Environments: Production
-echo    - Click "Save and Redeploy"
+echo      Value: https://backend-xxx.onrender.com/api
+echo    Redeploy
 echo.
-echo 3. Test:
-echo    - Visit: https://mohamedsshop.vercel.app
-echo    - Create an order
-echo    - Check if it saves!
+echo 9. Test: Visit https://mohamedsshop.vercel.app
+echo    Create an order - should work!
 echo.
 echo ====================================
 echo.
